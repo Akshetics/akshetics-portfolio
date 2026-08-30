@@ -1,19 +1,58 @@
 /* ═══════════════════════════════════════
-   AKSHETICS — JS
-   Vanilla. No dependencies.
-══════════════════════════════════════ */
+   AKSHETICS — JavaScript
+   Vanilla JS — No dependencies
+═══════════════════════════════════════ */
 
 (function () {
   "use strict";
 
-  /* ────────────────────────────────────
-     MOBILE NAVIGATION
-  ──────────────────────────────────── */
+
+  /* ═══════════════════════════════════════
+     ELEMENTS
+  ═══════════════════════════════════════ */
 
   const hamburger = document.getElementById("hamburger");
   const navMenu = document.getElementById("nav-menu");
   const navOverlay = document.getElementById("nav-overlay");
   const navClose = document.getElementById("nav-close");
+
+  const modal = document.getElementById("reel-modal");
+  const modalVideo = document.getElementById("modal-video");
+  const modalTitle = document.getElementById("modal-title");
+  const modalClose = document.getElementById("modal-close");
+  const modalBackdrop = document.getElementById("modal-backdrop");
+
+  const brandCard = document.getElementById("brand-card");
+
+
+  /* ═══════════════════════════════════════
+     SCROLL LOCK
+  ═══════════════════════════════════════ */
+
+  function updateScrollLock() {
+    const menuOpen =
+      navMenu && navMenu.classList.contains("is-open");
+
+    const modalOpen =
+      modal && !modal.hidden;
+
+    const shouldLock = menuOpen || modalOpen;
+
+    document.body.classList.toggle(
+      "nav-open",
+      shouldLock
+    );
+
+    document.documentElement.classList.toggle(
+      "nav-open",
+      shouldLock
+    );
+  }
+
+
+  /* ═══════════════════════════════════════
+     MOBILE NAVIGATION
+  ═══════════════════════════════════════ */
 
   function openNav() {
     if (!navMenu || !hamburger) return;
@@ -25,16 +64,19 @@
       navOverlay.classList.add("is-visible");
     }
 
-    document.body.classList.add("nav-open");
-    document.documentElement.classList.add("nav-open");
+    hamburger.setAttribute(
+      "aria-expanded",
+      "true"
+    );
 
-    /* Prevent horizontal movement while menu is open */
-    document.body.style.overflowX = "hidden";
-    document.documentElement.style.overflowX = "hidden";
+    hamburger.setAttribute(
+      "aria-label",
+      "Close menu"
+    );
 
-    hamburger.setAttribute("aria-expanded", "true");
-    hamburger.setAttribute("aria-label", "Close menu");
+    updateScrollLock();
   }
+
 
   function closeNav() {
     if (!navMenu || !hamburger) return;
@@ -46,379 +88,762 @@
       navOverlay.classList.remove("is-visible");
     }
 
-    document.body.classList.remove("nav-open");
-    document.documentElement.classList.remove("nav-open");
+    hamburger.setAttribute(
+      "aria-expanded",
+      "false"
+    );
 
-    document.body.style.overflowX = "";
-    document.documentElement.style.overflowX = "";
+    hamburger.setAttribute(
+      "aria-label",
+      "Open menu"
+    );
 
-    hamburger.setAttribute("aria-expanded", "false");
-    hamburger.setAttribute("aria-label", "Open menu");
+    updateScrollLock();
   }
+
 
   if (hamburger && navMenu) {
-    hamburger.addEventListener("click", function () {
-      if (navMenu.classList.contains("is-open")) {
-        closeNav();
-      } else {
-        openNav();
-      }
-    });
 
-    if (navOverlay) {
-      navOverlay.addEventListener("click", closeNav);
-    }
+    hamburger.addEventListener(
+      "click",
+      function () {
 
-    if (navClose) {
-      navClose.addEventListener("click", closeNav);
-    }
+        if (
+          navMenu.classList.contains(
+            "is-open"
+          )
+        ) {
+          closeNav();
+        } else {
+          openNav();
+        }
 
-    navMenu.querySelectorAll(".nav-link").forEach(function (link) {
-      link.addEventListener("click", closeNav);
-    });
-
-    document.addEventListener("keydown", function (e) {
-      if (
-        e.key === "Escape" &&
-        navMenu.classList.contains("is-open")
-      ) {
-        closeNav();
-      }
-    });
-  }
-
-
-  /* ────────────────────────────────────
-     SCROLL REVEAL
-  ──────────────────────────────────── */
-
-  var revealEls = document.querySelectorAll(".reveal");
-
-  if ("IntersectionObserver" in window) {
-    var revealObserver = new IntersectionObserver(
-      function (entries, observer) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        });
-      },
-      {
-        threshold: 0.10,
-        rootMargin: "0px 0px -30px 0px"
       }
     );
 
-    revealEls.forEach(function (el) {
-      revealObserver.observe(el);
-    });
 
-  } else {
-    revealEls.forEach(function (el) {
-      el.classList.add("is-visible");
-    });
+    if (navOverlay) {
+      navOverlay.addEventListener(
+        "click",
+        closeNav
+      );
+    }
+
+
+    if (navClose) {
+      navClose.addEventListener(
+        "click",
+        closeNav
+      );
+    }
+
+
+    navMenu
+      .querySelectorAll(".nav-link")
+      .forEach(function (link) {
+
+        link.addEventListener(
+          "click",
+          closeNav
+        );
+
+      });
+
+
+    document.addEventListener(
+      "keydown",
+      function (event) {
+
+        if (
+          event.key === "Escape" &&
+          navMenu.classList.contains("is-open")
+        ) {
+          closeNav();
+        }
+
+      }
+    );
+
   }
 
 
-  /* ────────────────────────────────────
-     REEL BACKGROUND VIDEO AUTOPLAY
-     Plays muted in cards. Pauses off-screen.
-  ──────────────────────────────────── */
+  /* ═══════════════════════════════════════
+     SCROLL REVEAL
+  ═══════════════════════════════════════ */
 
-  var bgVideos = document.querySelectorAll(".reel-bg");
+  const revealElements =
+    document.querySelectorAll(".reveal");
+
+
+  if (
+    "IntersectionObserver" in window
+  ) {
+
+    const revealObserver =
+      new IntersectionObserver(
+        function (entries, observer) {
+
+          entries.forEach(
+            function (entry) {
+
+              if (
+                !entry.isIntersecting
+              ) {
+                return;
+              }
+
+
+              entry.target.classList.add(
+                "is-visible"
+              );
+
+
+              observer.unobserve(
+                entry.target
+              );
+
+            }
+          );
+
+        },
+        {
+          threshold: 0.10,
+          rootMargin:
+            "0px 0px -30px 0px"
+        }
+      );
+
+
+    revealElements.forEach(
+      function (element) {
+
+        revealObserver.observe(
+          element
+        );
+
+      }
+    );
+
+  } else {
+
+    revealElements.forEach(
+      function (element) {
+
+        element.classList.add(
+          "is-visible"
+        );
+
+      }
+    );
+
+  }
+
+
+  /* ═══════════════════════════════════════
+     REEL BACKGROUND VIDEO
+     
+     - Muted autoplay
+     - Plays when visible
+     - Pauses when off-screen
+  ═══════════════════════════════════════ */
+
+  const backgroundVideos =
+    document.querySelectorAll(".reel-bg");
+
 
   function tryPlay(video) {
+
     if (!video) return;
 
     video.muted = true;
+    video.playsInline = true;
 
-    var p = video.play();
+    const playPromise =
+      video.play();
 
-    if (p && typeof p.catch === "function") {
-      p.catch(function () {});
+
+    if (
+      playPromise &&
+      typeof playPromise.catch === "function"
+    ) {
+
+      playPromise.catch(
+        function () {
+          /* Autoplay can be blocked
+             by the browser. */
+        }
+      );
+
     }
+
   }
 
-  if ("IntersectionObserver" in window) {
 
-    var videoObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
+  function hidePlaceholder(video) {
 
-          var v = entry.target;
+    if (!video || !video.parentElement) {
+      return;
+    }
 
-          if (entry.isIntersecting) {
 
-            tryPlay(v);
+    const placeholder =
+      video.parentElement.querySelector(
+        ".reel-placeholder"
+      );
 
-            var ph =
-              v.parentElement &&
-              v.parentElement.querySelector(".reel-placeholder");
 
-            if (ph) {
-              v.addEventListener(
-                "playing",
-                function hidePlaceholder() {
-                  ph.style.opacity = "0";
-                  ph.style.pointerEvents = "none";
+    if (!placeholder) {
+      return;
+    }
 
-                  v.removeEventListener(
-                    "playing",
-                    hidePlaceholder
-                  );
-                }
-              );
+
+    placeholder.style.opacity = "0";
+    placeholder.style.pointerEvents =
+      "none";
+
+  }
+
+
+  function showPlaceholder(video) {
+
+    if (!video || !video.parentElement) {
+      return;
+    }
+
+
+    const placeholder =
+      video.parentElement.querySelector(
+        ".reel-placeholder"
+      );
+
+
+    if (!placeholder) {
+      return;
+    }
+
+
+    placeholder.style.opacity = "1";
+    placeholder.style.pointerEvents =
+      "auto";
+
+  }
+
+
+  if (
+    "IntersectionObserver" in window
+  ) {
+
+    const videoObserver =
+      new IntersectionObserver(
+        function (entries) {
+
+          entries.forEach(
+            function (entry) {
+
+              const video =
+                entry.target;
+
+
+              if (
+                entry.isIntersecting
+              ) {
+
+                tryPlay(video);
+
+
+                video.addEventListener(
+                  "playing",
+                  function onPlaying() {
+
+                    hidePlaceholder(
+                      video
+                    );
+
+                    video.removeEventListener(
+                      "playing",
+                      onPlaying
+                    );
+
+                  }
+                );
+
+              } else {
+
+                video.pause();
+
+              }
+
             }
+          );
 
-          } else {
-            v.pause();
-          }
-        });
-      },
-      {
-        threshold: 0.3
+        },
+        {
+          threshold: 0.30
+        }
+      );
+
+
+    backgroundVideos.forEach(
+      function (video) {
+
+        video.muted = true;
+        video.playsInline = true;
+
+        videoObserver.observe(
+          video
+        );
+
       }
     );
 
-    bgVideos.forEach(function (v) {
-      v.muted = true;
-      videoObserver.observe(v);
-    });
-
   } else {
 
-    bgVideos.forEach(function (v) {
-      tryPlay(v);
-    });
+    backgroundVideos.forEach(
+      function (video) {
+
+        tryPlay(video);
+
+      }
+    );
+
   }
 
 
-  /* ────────────────────────────────────
+  /* ═══════════════════════════════════════
      REEL MODAL
-  ──────────────────────────────────── */
+  ═══════════════════════════════════════ */
 
-  var modal = document.getElementById("reel-modal");
-  var modalVideo = document.getElementById("modal-video");
-  var modalTitle = document.getElementById("modal-title");
-  var modalClose = document.getElementById("modal-close");
-  var modalBg = document.getElementById("modal-backdrop");
+  function openModal(
+    source,
+    title
+  ) {
 
-  function openModal(src, title) {
+    if (
+      !modal ||
+      !modalVideo
+    ) {
+      return;
+    }
 
-    if (!modal || !modalVideo) return;
 
-    modalVideo.src = src;
+    if (!source) {
+      return;
+    }
+
+
+    /* Stop currently playing card
+       videos before opening modal. */
+
+    backgroundVideos.forEach(
+      function (video) {
+        video.pause();
+      }
+    );
+
+
+    modalVideo.pause();
+
+    modalVideo.src = source;
+
+    modalVideo.load();
+
+
+    /*
+      Modal video has sound enabled.
+      The browser will still decide whether
+      autoplay is allowed.
+    */
+
     modalVideo.muted = false;
 
+
     if (modalTitle) {
-      modalTitle.textContent = title || "";
+
+      modalTitle.textContent =
+        title || "";
+
     }
+
 
     modal.hidden = false;
 
-    document.body.classList.add("nav-open");
 
-    /* Prevent background horizontal/vertical scrolling */
-    document.body.style.overflowX = "hidden";
-    document.documentElement.style.overflowX = "hidden";
+    updateScrollLock();
 
-    var p = modalVideo.play();
 
-    if (p && typeof p.catch === "function") {
-      p.catch(function () {});
+    const playPromise =
+      modalVideo.play();
+
+
+    if (
+      playPromise &&
+      typeof playPromise.catch === "function"
+    ) {
+
+      playPromise.catch(
+        function () {
+          /* User can press play manually
+             if autoplay is blocked. */
+        }
+      );
+
     }
+
   }
+
 
   function closeModal() {
 
-    if (!modal || !modalVideo) return;
+    if (
+      !modal ||
+      !modalVideo
+    ) {
+      return;
+    }
+
 
     modalVideo.pause();
-    modalVideo.src = "";
+
+    modalVideo.removeAttribute(
+      "src"
+    );
+
+    modalVideo.load();
+
 
     modal.hidden = true;
 
-    document.body.classList.remove("nav-open");
 
-    document.body.style.overflowX = "";
-    document.documentElement.style.overflowX = "";
+    if (modalTitle) {
+      modalTitle.textContent = "";
+    }
+
+
+    updateScrollLock();
+
   }
 
 
-  /* Attach open to every reel card */
+  /* ═══════════════════════════════════════
+     REEL CARD CLICK
+  ═══════════════════════════════════════ */
 
-  document.querySelectorAll(".reel-card").forEach(function (card) {
+  const reelCards =
+    document.querySelectorAll(
+      ".reel-card"
+    );
 
-    function handleOpen() {
 
-      var src = card.getAttribute("data-src");
-      var title = card.getAttribute("data-title");
+  reelCards.forEach(
+    function (card) {
 
-      if (src) {
-        openModal(src, title);
+      function handleOpen() {
+
+        const source =
+          card.getAttribute(
+            "data-src"
+          );
+
+
+        const title =
+          card.getAttribute(
+            "data-title"
+          );
+
+
+        if (source) {
+
+          openModal(
+            source,
+            title
+          );
+
+        }
+
       }
+
+
+      card.addEventListener(
+        "click",
+        handleOpen
+      );
+
+
+      card.addEventListener(
+        "keydown",
+        function (event) {
+
+          if (
+            event.key === "Enter" ||
+            event.key === " "
+          ) {
+
+            event.preventDefault();
+
+            handleOpen();
+
+          }
+
+        }
+      );
+
     }
+  );
 
-    card.addEventListener("click", handleOpen);
 
-    card.addEventListener("keydown", function (e) {
-
-      if (e.key === "Enter" || e.key === " ") {
-
-        e.preventDefault();
-        handleOpen();
-      }
-    });
-  });
-
+  /* ═══════════════════════════════════════
+     MODAL CLOSE BUTTON
+  ═══════════════════════════════════════ */
 
   if (modalClose) {
-    modalClose.addEventListener("click", closeModal);
+
+    modalClose.addEventListener(
+      "click",
+      closeModal
+    );
+
   }
 
-  if (modalBg) {
-    modalBg.addEventListener("click", closeModal);
+
+  if (modalBackdrop) {
+
+    modalBackdrop.addEventListener(
+      "click",
+      closeModal
+    );
+
   }
 
 
-  document.addEventListener("keydown", function (e) {
+  document.addEventListener(
+    "keydown",
+    function (event) {
 
-    if (
-      e.key === "Escape" &&
-      modal &&
-      !modal.hidden
-    ) {
-      closeModal();
+      if (
+        event.key === "Escape" &&
+        modal &&
+        !modal.hidden
+      ) {
+
+        closeModal();
+
+      }
+
     }
-  });
+  );
 
 
-  /* ────────────────────────────────────
+  /* ═══════════════════════════════════════
      BRAND CARD FLOAT ANIMATION
-  ──────────────────────────────────── */
+  ═══════════════════════════════════════ */
 
-  var brandCard = document.getElementById("brand-card");
-
-  var prefersReducedMotion =
-    window.matchMedia &&
+  const prefersReducedMotion =
     window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
 
-  if (brandCard && !prefersReducedMotion) {
+  if (
+    brandCard &&
+    !prefersReducedMotion
+  ) {
 
-    var rafId = null;
-    var startT = null;
+    let animationFrame = null;
+    let startTime = null;
 
-    function floatCard(t) {
 
-      if (!startT) {
-        startT = t;
+    function floatCard(timestamp) {
+
+      if (!startTime) {
+        startTime = timestamp;
       }
 
-      var elapsed = (t - startT) / 1000;
 
-      var dy = Math.sin(elapsed * 0.9) * 4;
+      const elapsed =
+        (timestamp - startTime) /
+        1000;
+
+
+      const verticalMovement =
+        Math.sin(
+          elapsed * 0.9
+        ) * 4;
+
 
       brandCard.style.transform =
         "rotate(2deg) translateY(" +
-        dy +
+        verticalMovement +
         "px)";
 
-      rafId = requestAnimationFrame(floatCard);
+
+      animationFrame =
+        requestAnimationFrame(
+          floatCard
+        );
+
     }
 
-    rafId = requestAnimationFrame(floatCard);
+
+    animationFrame =
+      requestAnimationFrame(
+        floatCard
+      );
+
 
     window.addEventListener(
       "beforeunload",
       function () {
 
-        if (rafId) {
-          cancelAnimationFrame(rafId);
+        if (animationFrame) {
+
+          cancelAnimationFrame(
+            animationFrame
+          );
+
         }
+
       }
     );
+
   }
 
 
-  /* ────────────────────────────────────
+  /* ═══════════════════════════════════════
      MARQUEE PAUSE ON HOVER
-  ──────────────────────────────────── */
+  ═══════════════════════════════════════ */
 
-  var marqueeInner =
-    document.querySelector(".marquee-inner");
+  const marquee =
+    document.querySelector(
+      ".marquee-inner"
+    );
 
-  if (marqueeInner) {
 
-    marqueeInner.addEventListener(
+  if (marquee) {
+
+    marquee.addEventListener(
       "mouseenter",
       function () {
-        marqueeInner.style.animationPlayState =
+
+        marquee.style.animationPlayState =
           "paused";
+
       }
     );
 
-    marqueeInner.addEventListener(
+
+    marquee.addEventListener(
       "mouseleave",
       function () {
-        marqueeInner.style.animationPlayState =
+
+        marquee.style.animationPlayState =
           "running";
+
       }
     );
+
   }
 
 
-  /* ────────────────────────────────────
-     SMOOTH SCROLL FOR INTERNAL LINKS
-  ──────────────────────────────────── */
+  /* ═══════════════════════════════════════
+     SMOOTH INTERNAL SCROLL
+  ═══════════════════════════════════════ */
 
   document
-    .querySelectorAll('a[href^="#"]')
-    .forEach(function (link) {
+    .querySelectorAll(
+      'a[href^="#"]'
+    )
+    .forEach(
+      function (link) {
 
-      link.addEventListener(
-        "click",
-        function (e) {
+        link.addEventListener(
+          "click",
+          function (event) {
 
-          var id =
-            link
-              .getAttribute("href")
-              .slice(1);
-
-          if (!id) return;
-
-          var target =
-            document.getElementById(id);
-
-          if (!target) return;
-
-          e.preventDefault();
-
-          target.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-        }
-      );
-    });
+            const href =
+              link.getAttribute(
+                "href"
+              );
 
 
-  /* ────────────────────────────────────
-     FINAL HORIZONTAL OVERFLOW PROTECTION
-  ──────────────────────────────────── */
+            if (
+              !href ||
+              href === "#"
+            ) {
+              return;
+            }
 
-  function preventHorizontalOverflow() {
 
-    document.documentElement.style.overflowX = "hidden";
+            const targetId =
+              href.substring(1);
 
-    if (!document.body.classList.contains("nav-open")) {
-      document.body.style.overflowX = "hidden";
-    }
+
+            const target =
+              document.getElementById(
+                targetId
+              );
+
+
+            if (!target) {
+              return;
+            }
+
+
+            event.preventDefault();
+
+
+            /*
+              Close mobile navigation
+              before scrolling.
+            */
+
+            if (
+              navMenu &&
+              navMenu.classList.contains(
+                "is-open"
+              )
+            ) {
+
+              closeNav();
+
+            }
+
+
+            target.scrollIntoView(
+              {
+                behavior: "smooth",
+                block: "start"
+              }
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+  /* ═══════════════════════════════════════
+     INITIAL STATE
+  ═══════════════════════════════════════ */
+
+  if (modal) {
+    modal.hidden = true;
   }
 
-  preventHorizontalOverflow();
+
+  if (hamburger) {
+
+    hamburger.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+
+    hamburger.setAttribute(
+      "aria-label",
+      "Open menu"
+    );
+
+  }
+
 
 })();
