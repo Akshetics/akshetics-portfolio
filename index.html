@@ -1,549 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <meta
-    name="description"
-    content="AKSHETICS — Professional video editor creating clean, engaging edits for creators, brands and businesses."
-  />
-
-  <meta name="theme-color" content="#ffffff" />
-
-  <title>AKSHETICS — Video Editor</title>
-
-  <!-- Poppins -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-
-  <link rel="stylesheet" href="akshetics.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKSHETICS — Video Editor</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-  <div class="page-noise" aria-hidden="true"></div>
-
-
-  <!-- ═══════════════════════════════════════
-       HEADER
-  ═══════════════════════════════════════ -->
-
-  <header class="site-header" id="home">
-
-    <nav class="nav container" aria-label="Primary">
-
-      <a
-        class="brand"
-        href="#home"
-        aria-label="AKSHETICS home"
-      >
-        <img
-          src="logo-transparent.png"
-          alt="AKSHETICS"
-          width="110"
-        />
-      </a>
-
-
-      <button
-        class="hamburger"
-        id="hamburger"
-        type="button"
-        aria-expanded="false"
-        aria-controls="nav-menu"
-        aria-label="Open menu"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-
-      <div class="nav-menu" id="nav-menu">
-
-        <button
-          class="nav-close"
-          id="nav-close"
-          type="button"
-          aria-label="Close menu"
-        >
-          ×
-        </button>
-
-        <a href="#about" class="nav-link">
-          About
-        </a>
-
-        <a href="#work" class="nav-link">
-          Work
-        </a>
-
-        <a href="#reviews" class="nav-link">
-          Reviews
-        </a>
-
-        <a
-          href="#contact"
-          class="nav-link nav-cta"
-        >
-          Let's Work Together
-        </a>
-
-      </div>
-
-    </nav>
-
-  </header>
-
-
-  <div
-    class="nav-overlay"
-    id="nav-overlay"
-  ></div>
-
-
-  <main>
-
-
-    <!-- ═══════════════════════════════════════
-         HERO
-    ═══════════════════════════════════════ -->
-
-    <section
-      class="hero"
-      id="hero"
-    >
-
-      <div class="container hero-inner">
-
-
-        <!-- HERO TEXT -->
-
-        <div class="hero-copy reveal">
-
-          <p class="eyebrow">
-            VIDEO EDITOR · AI CREATOR
-          </p>
-
-
-          <h1>
-            I turn raw footage into
-            <em>
-              content people want to watch.
-            </em>
-          </h1>
-
-
-          <p class="hero-sub">
-            Clean, engaging edits for creators, brands
-            and businesses — short-form reels to
-            long-form videos, paced to hold attention
-            and built to convert.
-          </p>
-
-
-          <div class="hero-actions">
-
-            <a
-              href="#work"
-              class="btn btn-primary"
-            >
-              View My Work
-              <span aria-hidden="true">↘</span>
-            </a>
-
-
-            <a
-              href="#contact"
-              class="btn btn-ghost"
-            >
-              Let's Work Together
-              <span aria-hidden="true">→</span>
-            </a>
-
-          </div>
-
-
-          <div class="hero-badges">
-
-            <span class="badge-live">
-              <span
-                class="dot"
-                aria-hidden="true"
-              ></span>
-
-              Available for freelance
-            </span>
-
-            <span class="badge-count">
-              50+ clients
-            </span>
-
-          </div>
-
-        </div>
-
-
-        <!-- BRAND CARD -->
-
-        <div class="hero-visual reveal reveal-delay">
-
-          <div
-            class="brand-card"
-            id="brand-card"
-          >
-
-            <img
-              src="logo-transparent.png"
-              alt="AKSHETICS logo"
-              class="brand-card-logo"
-            />
-
-
-            <div class="brand-card-body">
-
-              <!-- MAIN BRAND HEADING -->
-
-              <p class="brand-card-name">
-                AKSHETICS
-              </p>
-
-
-              <!-- MAIN PROFESSION -->
-
-              <ul class="brand-card-tags">
-
-                <li class="brand-card-video-editor">
-                  VIDEO EDITOR
-                </li>
-
-                <li>
-                  AI CREATOR
-                </li>
-
-                <li>
-                  FREELANCE WORK
-                </li>
-
-              </ul>
-
-            </div>
-
-
-            <p
-              class="brand-card-mark"
-              aria-hidden="true"
-            >
-              AK / 01
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="scroll-cue"
-        aria-hidden="true"
-      >
-
-        <span class="scroll-dot"></span>
-
-        Scroll to explore
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ═══════════════════════════════════════
-         ABOUT
-    ═══════════════════════════════════════ -->
-
-    <section
-      class="section bg-pale"
-      id="about"
-    >
-
-      <div class="container">
-
-
-        <header class="section-header reveal">
-
-          <p class="eyebrow">
-            WHAT I DO
-          </p>
-
-          <h2>
-            Editing built around
-            <br />
-            <em>
-              attention, clarity &amp; impact.
-            </em>
-          </h2>
-
-        </header>
-
-
-        <div class="about-grid">
-
-
-          <div class="about-copy reveal">
-
-            <p>
-              Good editing is more than cuts and effects.
-              I shape raw footage into content that feels
-              natural, keeps the viewer engaged and
-              communicates your message clearly.
-            </p>
-
-
-            <p>
-              Whether you're a creator building an audience
-              or a brand launching a product, the edit is
-              where the story comes together.
-            </p>
-
-          </div>
-
-
-
-          <ol
-            class="services-list reveal reveal-delay"
-          >
-
-            <li class="service-item">
-
-              <span class="service-num">
-                01
-              </span>
-
-              <div class="service-info">
-
-                <strong>
-                  Short-form &amp; Reels
-                </strong>
-
-                <em>
-                  Instagram · Facebook · Shorts
-                </em>
-
-              </div>
-
-            </li>
-
-
-            <li class="service-item">
-
-              <span class="service-num">
-                02
-              </span>
-
-              <div class="service-info">
-
-                <strong>
-                  Tech Videos
-                </strong>
-
-                <em>
-                  Clean, fast &amp; informative
-                </em>
-
-              </div>
-
-            </li>
-
-
-            <li class="service-item">
-
-              <span class="service-num">
-                03
-              </span>
-
-              <div class="service-info">
-
-                <strong>
-                  Talking-head
-                </strong>
-
-                <em>
-                  Retention-focused editing
-                </em>
-
-              </div>
-
-            </li>
-
-
-            <li class="service-item">
-
-              <span class="service-num">
-                04
-              </span>
-
-              <div class="service-info">
-
-                <strong>
-                  Product &amp; Brand
-                </strong>
-
-                <em>
-                  Visual storytelling
-                </em>
-
-              </div>
-
-            </li>
-
-
-            <li class="service-item">
-
-              <span class="service-num">
-                05
-              </span>
-
-              <div class="service-info">
-
-                <strong>
-                  YouTube Long-form
-                </strong>
-
-                <em>
-                  Pacing &amp; structure
-                </em>
-
-              </div>
-
-            </li>
-
-
-            <li class="service-item">
-
-              <span class="service-num">
-                06
-              </span>
-
-              <div class="service-info">
-
-                <strong>
-                  Basic Motion Graphics
-                </strong>
-
-                <em>
-                  Clean supporting visuals
-                </em>
-
-              </div>
-
-            </li>
-
-          </ol>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ═══════════════════════════════════════
-         PLATFORMS
-    ═══════════════════════════════════════ -->
-
-    <section
-      class="section bg-dark platforms-section"
-    >
-
-      <div class="container">
-
-        <p
-          class="eyebrow eyebrow-light reveal"
-        >
-          PLATFORMS
-        </p>
-
-
-        <h2
-          class="platforms-heading reveal"
-        >
-          I edit for every
-          <br />
-          <em>
-            major platform.
-          </em>
-        </h2>
-
-      </div>
-
-
-      <div
-        class="marquee-wrap"
-        aria-hidden="true"
-      >
-
-        <div class="marquee-track">
-
-          <div class="marquee-inner">
-
-            <span class="pill">
-              Instagram Reels
-            </span>
-
-            <span class="pill">
-              Facebook Reels
-            </span>
-
-            <span class="pill">
-              YouTube Shorts
-            </span>
-
-            <span class="pill">
-              YouTube Long-form
-            </span>
-
-            <span class="pill">
-              Automotive Content
-            </span>
-
-
-            <span class="pill">
-              Instagram Reels
-            </span>
-
-            <span class="pill">
-              Facebook Reels
-            </span>
-
-            <span class="pill">
-              YouTube Shorts
-            </span>
-
-            <span class="pill">
-              YouTube Long-form
-            </span>
-
-            <span class="pill">
-              Automotive Content
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ═══════════════════════════════════════
+<header class="navbar">
+  <a href="#home" class="logo">
+    <img src="logo-transparent.png" alt="AKS logo">
+    <span>AKSHETICS</span>
+  </a>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#work">Work</a>
+  </nav>
+</header>
+
+<div class="brand-heading">
+  <h1>AKSHETICS</h1>
+  <p>Video Editor</p>
+</div>
+
+<section id="home" class="hero">
+  <p class="tag">VIDEO EDITOR · AI CREATOR</p>
+  <h2>I turn raw footage into <span class="accent">content people want to watch.</span></h2>
+  <p class="hero-sub">Clean, engaging edits for creators, brands and businesses — short-form reels to long-form videos, paced to hold attention and built to convert.</p>
+  <div class="hero-buttons">
+    <a href="#work" class="btn btn-primary">View My Work ↘</a>
+    <a href="#services" class="btn btn-secondary">My Services →</a>
+  </div>
+  <p class="hero-note">● Available for freelance &nbsp; 50+ clients</p>
+</section>
+
+<section id="about" class="section">
+  <p class="tag">ABOUT ME</p>
+  <h2>The editor behind <span class="accent">AKSHETICS.</span></h2>
+  <p class="section-intro">
+    I'm a video editor who blends clean, fast-paced cuts with an eye for retention — turning raw footage into content that actually holds attention. I've worked with creators, brands and businesses on everything from 15-second reels to long-form YouTube videos.
+  </p>
+</section>
+
+<section id="services" class="section services-section">
+  <p class="tag">SERVICES</p>
+  <h2>What I <span class="accent">edit.</span></h2>
+  <div class="grid">
+    <div class="card"><h3>Short-form & Reels</h3><p>Instagram · Facebook · Shorts</p></div>
+    <div class="card"><h3>Tech Videos</h3><p>Clean, fast & informative</p></div>
+    <div class="card"><h3>Talking-head</h3><p>Retention-focused editing</p></div>
+    <div class="card"><h3>Product & Brand</h3><p>Visual storytelling</p></div>
+    <div class="card"><h3>Automotive Content</h3><p>Dynamic, high-impact edits</p></div>
+    <div class="card"><h3>Motion Graphics</h3><p>Clean supporting visuals</p></div>
+  </div>
+</section>
+
+<section id="work" class="section work-section">
+  <p class="tag">WORK</p>
+  <h2>Recent <span class="accent">edits.</span></h2>
+  <p class="work-hint">Tap any video to watch with sound</p>
+
+  <div class="video-grid">
+    <div class="video-card"><video muted loop playsinline preload="metadata" src="video1.mp4"></video><h3>Brand</h3></div>
+    <div class="video-card"><video muted loop playsinline preload="metadata" src="video2.mp4"></video><h3>Brand</h3></div>
+    <div class="video-card"><video muted loop playsinline preload="metadata" src="video3.mp4"></video><h3>Tech</h3></div>
+    <div class="video-card"><video muted loop playsinline preload="metadata" src="video4.mp4"></video><h3>Tech</h3></div>
+    <div class="video-card"><video muted loop playsinline preload="metadata" src="video5.mp4"></video><h3>Product</h3></div>
+    <div class="video-card"><video muted loop playsinline preload="metadata" src="video6.mp4"></video><h3>Talking Head</h3></div>
+    <div class="video-card"><video muted loop playsinline preload="metadata" src="video7.mp4"></video><h3>Talking Head</h3></div>
+    <div class="video-card"><video muted loop playsinline preload="metadata" src="video8.mp4"></video><h3>Automotive</h3></div>
+  </div>
+
+  <p class="work-cta">Like what you see? <a href="mailto:work.akshetics@gmail.com">Let's talk about your project →</a></p>
+</section>
+
+<section id="reviews" class="section">
+  <p class="tag">CLIENT REVIEWS</p>
+  <h2>What clients <span class="accent">say.</span></h2>
+  <div class="grid">
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <p>"Great understanding of what works on short-form. My reels performed way better after his edits."</p>
+      <span class="reviewer">— Client 1</span>
+    </div>
+    <div class="review-card">
+      <div class="stars">★★★★☆</div>
+      <p>"Professional, reliable and communicates well. The final video exceeded my expectations."</p>
+      <span class="reviewer">— Client 2</span>
+    </div>
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <p>"Delivered exactly what I needed — clean, fast edits with great attention to pacing."</p>
+      <span class="reviewer">— Client 3</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 AKSHETICS. Video Editor · AI Creator · Freelancer</p>
+  <div class="footer-links">
+    <a href="mailto:work.akshetics@gmail.com">Email</a>
+    <a href="https://www.instagram.com/akshetics?igsi=eGlqY2ZwcXIzczU1" target="_blank">Instagram</a>
+    <a href="https://youtube.com/@akshetics?si=Sm3LyRAP_2D-BFCN" target="_blank">YouTube</a>
+  </div>
+</footer>
+
+<div class="video-modal" id="videoModal">
+  <button class="modal-close" id="modalClose">✕</button>
+  <video id="modalVideo" controls playsinline></video>
+</div>
+
+<script src="script-1.js"></script>
+</body>
+</html>
