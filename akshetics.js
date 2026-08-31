@@ -10,188 +10,463 @@
 const menuToggle = document.querySelector(".menu-toggle");
 const mobileNav = document.querySelector(".mobile-nav");
 
-
 function setMenu(open) {
-
   if (!menuToggle || !mobileNav) return;
 
   menuToggle.classList.toggle("active", open);
-
   mobileNav.classList.toggle("open", open);
-
   document.body.classList.toggle("menu-open", open);
 
-  menuToggle.setAttribute(
-    "aria-expanded",
-    String(open)
-  );
-
-  mobileNav.setAttribute(
-    "aria-hidden",
-    String(!open)
-  );
+  menuToggle.setAttribute("aria-expanded", String(open));
+  mobileNav.setAttribute("aria-hidden", String(!open));
 }
 
-
-/* Open / close menu */
-
-if (menuToggle) {
-
+if (menuToggle && mobileNav) {
   menuToggle.addEventListener("click", () => {
-
-    const isOpen =
-      mobileNav.classList.contains("open");
-
+    const isOpen = mobileNav.classList.contains("open");
     setMenu(!isOpen);
-
   });
-
 }
 
-
-/* Close menu when navigation link is clicked */
-
-document
-  .querySelectorAll(".mobile-nav a")
-  .forEach(link => {
-
-    link.addEventListener("click", () => {
-
-      setMenu(false);
-
-    });
-
+document.querySelectorAll(".mobile-nav a").forEach(link => {
+  link.addEventListener("click", () => {
+    setMenu(false);
   });
-
+});
 
 
 /* =========================================================
    REEL VIDEO AUTOPLAY / AUTO PAUSE
 ========================================================= */
 
-const reelCards = [
-  ...document.querySelectorAll(".reel-card")
-];
+const reelCards = Array.from(
+  document.querySelectorAll(".reel-card")
+);
 
-const reelVideos = [
-  ...document.querySelectorAll(".reel-video")
-];
+const reelVideos = Array.from(
+  document.querySelectorAll(".reel-video")
+);
 
 
 /*
-   Videos automatically play when they become
-   sufficiently visible on screen.
-
-   They automatically pause when they leave
-   the visible area.
+   Prepare every preview video.
+   They stay muted so mobile browsers allow autoplay.
 */
 
-const videoObserver =
-  new IntersectionObserver(
+reelVideos.forEach(video => {
+  video.muted = true;
+  video.defaultMuted = true;
 
+  video.setAttribute("muted", "");
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "");
+  video.preload = "auto";
+});
+
+
+/*
+   Pause every other reel.
+*/
+
+function pauseOtherVideos(activeVideo) {
+  reelVideos.forEach(video => {
+    if (video !== activeVideo) {
+      video.pause();
+    }
+  });
+}
+
+
+/*
+   Play a preview video.
+*/
+
+function playPreview(video) {
+  if (!video) return;
+
+  video.muted = true;
+  video.defaultMuted = true;
+
+  const playPromise = video.play();
+
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      /*
+         Browser may temporarily reject autoplay.
+         The video remains available for user interaction.
+      */
+    });
+  }
+}
+
+
+/*
+   Intersection Observer
+   Reel starts when at least 25% is visible.
+*/
+
+if ("IntersectionObserver" in window) {
+
+  const reelObserver = new IntersectionObserver(
     entries => {
 
       entries.forEach(entry => {
 
         const video = entry.target;
 
-
-        /* Video visible */
-
         if (
           entry.isIntersecting &&
-          entry.intersectionRatio >= 0.45
+          entry.intersectionRatio >= 0.25
         ) {
 
-          /*
-             Pause every other reel.
-             This prevents multiple videos
-             from playing simultaneously.
-          */
-
-          reelVideos.forEach(otherVideo => {
-
-            if (otherVideo !== video) {
-
-              otherVideo.pause();
-
-            }
-
-          });
-
+          pauseOtherVideos(video);
 
           /*
-             Always keep preview videos muted.
+             Make sure the video has loaded enough data.
           */
 
-          video.muted = true;
+          if (video.readyState >= 2) {
 
+            playPreview(video);
 
-          /*
-             Attempt autoplay.
-             Browser may reject autoplay,
-             which is normal.
-          */
+          } else {
 
-          video
-            .play()
-            .catch(() => {});
+            video.addEventListener(
+              "canplay",
+              () => playPreview(video),
+              { once: true }
+            );
 
-        }
+            video.load();
+          }
 
-
-        /* Video no longer visible */
-
-        else {
+        } else {
 
           video.pause();
-
         }
 
       });
 
     },
-
     {
-      threshold: [
-        0,
-        0.45,
-        0.7
-      ]
+      threshold: [0, 0.25, 0.5, 0.75, 1]
     }
-
   );
 
 
-/*
-   Observe every reel video.
-*/
+  reelVideos.forEach(video => {
+    reelObserver.observe(video);
+  });
 
-reelVideos.forEach(video => {
+} else {
 
-  videoObserver.observe(video);
+  /*
+     Fallback for older browsers.
+  */
 
-});
+  reelVideos.forEach(video => {
+    playPreview(video);
+  });
 
+}
 
 
 /* =========================================================
    FULL REEL VIEWER
 ========================================================= */
 
-const modal =
-  document.querySelector(".reel-modal");
+const modal = document.querySelector(".reel-modal");
+const modalVideo = document.querySelector("#modalVideo");
+const modalTitle = document.querySelector("#modalTitle");
+const modalNumber = document.querySelector("#modalNumber");
+const modalClose = document.querySelector(".modal-close");
+const modalBackdrop = document.querySelector(".modal-backdrop");
 
-const modalVideo =
-  document.querySelector("#modalVideo");
 
-const modalTitle =
-  document.querySelector("#modalTitle");
+/*
+   Open full reel.
+*/
 
-const modalNumber =
-  document.querySelector("#modalNumber");
+function openReel(card) {
 
-const modalClose =
-  document.querySelector(".modal-close");
+  if (!modal || !modalVideo || !card) {
+    return;
+  }
 
-const modal
+  const preview = card.querySelector(".reel-video");
+
+  if (!preview) {
+    return;
+  }
+
+
+  /*
+     Stop all preview videos.
+  */
+
+  reelVideos.forEach(video => {
+    video.pause();
+  });
+
+
+  /*
+     Get the exact video URL.
+  */
+
+  const source =
+    preview.currentSrc ||
+    preview.getAttribute("src");
+
+
+  if (!source) {
+    return;
+  }
+
+
+  /*
+     Reset modal video.
+  */
+
+  modalVideo.pause();
+  modalVideo.removeAttribute("src");
+  modalVideo.load();
+
+
+  /*
+     Put selected reel into modal.
+  */
+
+  modalVideo.src = source;
+
+  modalVideo.controls = true;
+  modalVideo.playsInline = true;
+
+  /*
+     Full reel is NOT muted.
+  */
+
+  modalVideo.muted = false;
+  modalVideo.defaultMuted = false;
+
+
+  /*
+     Set title and number.
+  */
+
+  if (modalTitle) {
+    modalTitle.textContent =
+      card.dataset.title || "";
+  }
+
+  if (modalNumber) {
+    modalNumber.textContent =
+      card.dataset.index || "";
+  }
+
+
+  /*
+     Show modal.
+  */
+
+  modal.classList.add("open");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
+
+  /*
+     Load and play full reel.
+  */
+
+  modalVideo.load();
+
+  const startFullVideo = () => {
+
+    modalVideo.muted = false;
+
+    const playPromise =
+      modalVideo.play();
+
+    if (playPromise !== undefined) {
+
+      playPromise.catch(() => {
+        /*
+           Some mobile browsers require
+           an additional user tap for sound.
+           Controls remain available.
+        */
+      });
+
+    }
+
+  };
+
+
+  if (modalVideo.readyState >= 2) {
+
+    startFullVideo();
+
+  } else {
+
+    modalVideo.addEventListener(
+      "canplay",
+      startFullVideo,
+      { once: true }
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CLOSE FULL REEL
+========================================================= */
+
+function closeReel() {
+
+  if (!modal || !modalVideo) {
+    return;
+  }
+
+
+  modalVideo.pause();
+
+  modalVideo.removeAttribute("src");
+
+  modalVideo.load();
+
+
+  modal.classList.remove("open");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.classList.remove(
+    "modal-open"
+  );
+
+}
+
+
+/* =========================================================
+   CLICK REEL CARD
+========================================================= */
+
+reelCards.forEach(card => {
+
+  card.addEventListener(
+    "click",
+    event => {
+
+      /*
+         If sound hint was clicked,
+         its own handler handles it.
+      */
+
+      if (
+        event.target.closest(".sound-hint")
+      ) {
+        return;
+      }
+
+      openReel(card);
+
+    }
+  );
+
+});
+
+
+/* =========================================================
+   SOUND / FULLSCREEN BUTTON
+========================================================= */
+
+document
+  .querySelectorAll(".sound-hint")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      event => {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const card =
+          button.closest(".reel-card");
+
+        openReel(card);
+
+      }
+    );
+
+  });
+
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+if (modalClose) {
+
+  modalClose.addEventListener(
+    "click",
+    closeReel
+  );
+
+}
+
+
+/* =========================================================
+   CLICK BACKDROP TO CLOSE
+========================================================= */
+
+if (modalBackdrop) {
+
+  modalBackdrop.addEventListener(
+    "click",
+    closeReel
+  );
+
+}
+
+
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (event.key !== "Escape") {
+      return;
+    }
+
+
+    if (
+      modal &&
+      modal.classList.contains("open")
+    ) {
+
+      closeReel();
+
+    } else if (
+      mobileNav &&
+      mobileNav.classList.contains("open")
+    ) {
+
+      setMenu(false);
+
+    }
+
+ 
